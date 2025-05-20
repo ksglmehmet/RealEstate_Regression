@@ -60,6 +60,21 @@ tuik = pd.read_csv(path_tuik, sep = ";", encoding = "ISO-8859-9")
 
 df_Ankara["Old_Endex"] = 0
 
+# Veri Tiplerini Düzenleyelim.
+df_Ankara.info()
+float_to_int = ["Room", "LivingRoom", "Bahtroom"]
+df_Ankara[float_to_int] = df_Ankara[float_to_int].astype(int)
+# 66. satırda hata veriyor. FloorCountta nan olan değerler var. Onları fillna ile doldurup ortalamayı basacağım
+df_Ankara["FloorCount"] = df_Ankara["FloorCount"].fillna(df_Ankara["FloorCount"].mean()).astype(int)
+df_Ankara["BuildDate"] = df_Ankara["BuildDate"].fillna(df_Ankara["BuildDate"].mean()).astype(int)
+# df_Ankara["AdjustedPrice"] = df_Ankara["AdjustedPrice"].astype(int)
+# Ondalıklar virgül ile ayrılmış. Noktaya çevirip int yapabiliriz.
+df_Ankara["AdjustedPrice"]
+df_Ankara.info()
+
+
+Numeric_Variables = []
+
 i = 4
 for i in range(len(df_Ankara)):
     if df_Ankara["ListMonth"][i] == 1 & df_Ankara["ListYear"][i] == :
