@@ -6,13 +6,13 @@ import pandas as pd
 import openpyxl
 
 # Aşağıdaki path'leri kendi bilgisayarınıza göre değiştirin.
-# path_2023 = "C:/Users/mehmetakifkosoglu.TORUNLARENERJI/OneDrive - Torunlar Enerji Sanayi ve Ticaret Anonim Şirketi/Gayrimenkul Pazar Analizi/Odev_Regresyon/Data/2023 Apartman Satılık.csv
-path_2023 = "C:/Users/Makkos/Desktop/KsglMehmet/Personel_Workspace/Gayrimenkul_Pazar_Analizi/Data/2023 Apartman Satılık.csv"
-path_2022 = "C:/Users/Makkos/Desktop/KsglMehmet/Personel_Workspace/Gayrimenkul_Pazar_Analizi/Data/2022 Apartman Satılık.csv"
-path_2021 = "C:/Users/Makkos/Desktop/KsglMehmet/Personel_Workspace/Gayrimenkul_Pazar_Analizi/Data/2021 Apartman Satılık.csv"
-path_2020 = "C:/Users/Makkos/Desktop/KsglMehmet/Personel_Workspace/Gayrimenkul_Pazar_Analizi/Data/2020 Apartman Satılık.csv"
-path_2019 = "C:/Users/Makkos/Desktop/KsglMehmet/Personel_Workspace/Gayrimenkul_Pazar_Analizi/Data/2019 Apartman Satılık.csv"
-path_2018 = "C:/Users/Makkos/Desktop/KsglMehmet/Personel_Workspace/Gayrimenkul_Pazar_Analizi/Data/2018 Apartman Satılık.csv"
+
+path_2023 = "C:/Users/Makkos/Desktop/Personel_Workspace/RealEstate_Regression/Data/2023 Apartman Satılık.csv"
+path_2022 = "C:/Users/Makkos/Desktop/Personel_Workspace/RealEstate_Regression/Data/2022 Apartman Satılık.csv"
+path_2021 = "C:/Users/Makkos/Desktop/Personel_Workspace/RealEstate_Regression/Data/2021 Apartman Satılık.csv"
+path_2020 = "C:/Users/Makkos/Desktop/Personel_Workspace/RealEstate_Regression/Data/2020 Apartman Satılık.csv"
+path_2019 = "C:/Users/Makkos/Desktop/Personel_Workspace/RealEstate_Regression/Data/2019 Apartman Satılık.csv"
+path_2018 = "C:/Users/Makkos/Desktop/Personel_Workspace/RealEstate_Regression/Data/2018 Apartman Satılık.csv"
 # base_path = "C:/Users/mehmetakifkosoglu.TORUNLARENERJI/OneDrive - Torunlar Enerji Sanayi ve Ticaret Anonim Şirketi/Gayrimenkul Pazar Analizi/Odev_Regresyon/Data"
 # years = ["2023", "2022", "2021", "2020", "2019", "2018"]
 
@@ -36,7 +36,6 @@ data_2018 = pd.read_csv(path_2018, sep = ";", usecols = usecols, encoding = "ISO
 
 # import ettiklerimizi concat ile birleştirelim.
 data = pd.concat([data_2023, data_2022, data_2021, data_2020, data_2019, data_2018])
-# pandas concat ile tabloları birleştirdim. DEL komutuyla diğer tabloları siliyorum. Gereksiz şişirmesin.
 
 
 # Veriden Ankara - Çankaya - İlgili Mahalleleri Filtreleyelim. Onları Alalım.
@@ -53,10 +52,10 @@ df_Ankara = df[(df["CityName"] == "Ankara")
 df_Ankara = df_Ankara.reset_index(drop = True) # drop = True, index kolonun silsin diye.
 
 # Buraya kadar olan kısımı xlsx olarak dışarı alıp hocaya atıyorum. Derste istedi.
-df_Ankara.to_excel("cikti.xlsx")
+# df_Ankara.to_excel("cikti.xlsx")
 
 # Geçmiş tarihli fiyat verisini, Yİ-ÜFE ile bugüne getirelim. En güncel Yİ-ÜFE verisi 2025-Nisan'a ait.
-path_tuik = "C:/Users/mehmetakifkosoglu.TORUNLARENERJI/OneDrive - Torunlar Enerji Sanayi ve Ticaret Anonim Şirketi/Gayrimenkul Pazar Analizi/Odev_Regresyon/Data/yi_ufe.csv"
+path_tuik = "C:/Users/Makkos/Desktop/Personel_Workspace/RealEstate_Regression/Data/yi_ufe.csv"
 tuik = pd.read_csv(path_tuik, sep = ";", encoding = "ISO-8859-9")
 
 df_Ankara["Old_Endex"] = 0
