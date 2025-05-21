@@ -6,33 +6,40 @@ import pandas as pd
 import openpyxl
 
 # Aşağıdaki path'leri kendi bilgisayarınıza göre değiştirin.
+# Aşağıdaki pathleri değiştiricem. Evdeki pc ile ofisteki farktan dolayı. İkiside dursun.
 
-path_2023 = "C:/Users/Makkos/Desktop/Personel_Workspace/RealEstate_Regression/Data/2023 Apartman Satılık.csv"
-path_2022 = "C:/Users/Makkos/Desktop/Personel_Workspace/RealEstate_Regression/Data/2022 Apartman Satılık.csv"
-path_2021 = "C:/Users/Makkos/Desktop/Personel_Workspace/RealEstate_Regression/Data/2021 Apartman Satılık.csv"
-path_2020 = "C:/Users/Makkos/Desktop/Personel_Workspace/RealEstate_Regression/Data/2020 Apartman Satılık.csv"
-path_2019 = "C:/Users/Makkos/Desktop/Personel_Workspace/RealEstate_Regression/Data/2019 Apartman Satılık.csv"
+# Ofisteki PC PATH
+path_2018 = "C:/Users/mehmetakifkosoglu.TORUNLARENERJI/Desktop/Personel_Workspace/RealEstate_Regression/Data/2018 Apartman Satılık.csv"
+path_2019 = "C:/Users/mehmetakifkosoglu.TORUNLARENERJI/Desktop/Personel_Workspace/RealEstate_Regression/Data/2019 Apartman Satılık.csv"
+path_2020 = "C:/Users/mehmetakifkosoglu.TORUNLARENERJI/Desktop/Personel_Workspace/RealEstate_Regression/Data/2020 Apartman Satılık.csv"
+path_2021 = "C:/Users/mehmetakifkosoglu.TORUNLARENERJI/Desktop/Personel_Workspace/RealEstate_Regression/Data/2021 Apartman Satılık.csv"
+path_2022 = "C:/Users/mehmetakifkosoglu.TORUNLARENERJI/Desktop/Personel_Workspace/RealEstate_Regression/Data/2022 Apartman Satılık.csv"
+path_2023 = "C:/Users/mehmetakifkosoglu.TORUNLARENERJI/Desktop/Personel_Workspace/RealEstate_Regression/Data/2023 Apartman Satılık.csv"
+
+# Evdeki PC PATH
 path_2018 = "C:/Users/Makkos/Desktop/Personel_Workspace/RealEstate_Regression/Data/2018 Apartman Satılık.csv"
+path_2019 = "C:/Users/Makkos/Desktop/Personel_Workspace/RealEstate_Regression/Data/2019 Apartman Satılık.csv"
+path_2020 = "C:/Users/Makkos/Desktop/Personel_Workspace/RealEstate_Regression/Data/2020 Apartman Satılık.csv"
+path_2021 = "C:/Users/Makkos/Desktop/Personel_Workspace/RealEstate_Regression/Data/2021 Apartman Satılık.csv"
+path_2022 = "C:/Users/Makkos/Desktop/Personel_Workspace/RealEstate_Regression/Data/2022 Apartman Satılık.csv"
+path_2023 = "C:/Users/Makkos/Desktop/Personel_Workspace/RealEstate_Regression/Data/2023 Apartman Satılık.csv"
+
 # base_path = "C:/Users/mehmetakifkosoglu.TORUNLARENERJI/OneDrive - Torunlar Enerji Sanayi ve Ticaret Anonim Şirketi/Gayrimenkul Pazar Analizi/Odev_Regresyon/Data"
 # years = ["2023", "2022", "2021", "2020", "2019", "2018"]
 
-usecols = ["CityName", "CountyName", "DistrictName", "ComparableArea", "BrutArea", "AdjustedPrice", 
-"RealtyPrice", "Room", "LivingRoom", "Bahtroom", "FloorCount", "FloorNumber", 
-"BuildDate", "FrontageNorth", "FrontageSouth", "FrontageEast", "FrontageWest", 
-"AttributeMainRoad", "AttributeWideRoad", "AttributeSportComplex",
-"AttributePlayGround", "AttributeElevator", "AttributeGenerator", 
-"AttributeGateKeeper", "AttributeSecurity", "AttributeParkingAreaOutdoor",
-"AttributeParkingAreaIndoor", "AttributeSwimmingPoolOutdoor", 
-"AttributeSwimmingPoolIndoor", "AttributeHeatIsolation", "AttributeAirCondition",
-"ViewCity", "ViewNature", "ListMonth", "ListYear"]
+usecols = ["CityName", "CountyName", "DistrictName", "ComparableArea", "BrutArea", "AdjustedPrice",
+"RealtyPrice", "Room", "LivingRoom", "Bahtroom", "FloorNumber", "BuildDate", "FrontageNorth", "FrontageSouth", "FrontageEast", "FrontageWest", 
+"AttributeMainRoad", "AttributeWideRoad", "AttributeSportComplex", "AttributePlayGround", "AttributeElevator", "AttributeGenerator", 
+"AttributeGateKeeper", "AttributeSecurity", "AttributeParkingAreaOutdoor", "AttributeParkingAreaIndoor", "AttributeSwimmingPoolOutdoor", 
+"AttributeSwimmingPoolIndoor", "AttributeHeatIsolation", "AttributeAirCondition", "ViewCity", "ViewNature", "ListMonth", "ListYear"]
 
 
-data_2023 = pd.read_csv(path_2023, sep = ";", usecols = usecols)
-data_2022 = pd.read_csv(path_2022, sep = ";", usecols = usecols, encoding = "ISO-8859-9")
-data_2021 = pd.read_csv(path_2021, sep = ";", usecols = usecols, encoding = "ISO-8859-9")
-data_2020 = pd.read_csv(path_2020, sep = ";", usecols = usecols, encoding = "ISO-8859-9")
-data_2019 = pd.read_csv(path_2019, sep = ";", usecols = usecols, encoding = "ISO-8859-9")
 data_2018 = pd.read_csv(path_2018, sep = ";", usecols = usecols, encoding = "ISO-8859-9")
+data_2019 = pd.read_csv(path_2019, sep = ";", usecols = usecols, encoding = "ISO-8859-9")
+data_2020 = pd.read_csv(path_2020, sep = ";", usecols = usecols, encoding = "ISO-8859-9")
+data_2021 = pd.read_csv(path_2021, sep = ";", usecols = usecols, encoding = "ISO-8859-9")
+data_2022 = pd.read_csv(path_2022, sep = ";", usecols = usecols, encoding = "ISO-8859-9")
+data_2023 = pd.read_csv(path_2023, sep = ";", usecols = usecols)
 
 # import ettiklerimizi concat ile birleştirelim.
 data = pd.concat([data_2023, data_2022, data_2021, data_2020, data_2019, data_2018])
@@ -55,26 +62,28 @@ df_Ankara = df_Ankara.reset_index(drop = True) # drop = True, index kolonun sils
 # df_Ankara.to_excel("cikti.xlsx")
 
 # Geçmiş tarihli fiyat verisini, Yİ-ÜFE ile bugüne getirelim. En güncel Yİ-ÜFE verisi 2025-Nisan'a ait.
-path_tuik = "C:/Users/Makkos/Desktop/Personel_Workspace/RealEstate_Regression/Data/yi_ufe.csv"
+path_tuik = "C:/Users/mehmetakifkosoglu.TORUNLARENERJI/Desktop/Personel_Workspace/RealEstate_Regression/Data/yi_ufe.csv"
 tuik = pd.read_csv(path_tuik, sep = ";", encoding = "ISO-8859-9")
-
-df_Ankara["Old_Endex"] = 0
 
 # Veri Tiplerini Düzenleyelim.
 df_Ankara.info()
 float_to_int = ["Room", "LivingRoom", "Bahtroom"]
 df_Ankara[float_to_int] = df_Ankara[float_to_int].astype(int)
 # 66. satırda hata veriyor. FloorCountta nan olan değerler var. Onları fillna ile doldurup ortalamayı basacağım
-df_Ankara["FloorCount"] = df_Ankara["FloorCount"].fillna(df_Ankara["FloorCount"].mean()).astype(int)
+# df_Ankara["FloorCount"] = df_Ankara["FloorCount"].fillna(df_Ankara["FloorCount"].mean()).astype(int)
 df_Ankara["BuildDate"] = df_Ankara["BuildDate"].fillna(df_Ankara["BuildDate"].mean()).astype(int)
 # df_Ankara["AdjustedPrice"] = df_Ankara["AdjustedPrice"].astype(int)
 # Ondalıklar virgül ile ayrılmış. Noktaya çevirip int yapabiliriz.
-df_Ankara["AdjustedPrice"]
+df_Ankara["RealtyPrice"] = df_Ankara["RealtyPrice"].astype(int)
 df_Ankara.info()
 
+# Kullanmayacağım kolonları dropluyorum.
+ise_yaramaz = ["CityName", "CountyName", "AdjustedPrice"]
+df_Ankara = df_Ankara.drop(ise_yaramaz, axis = 1)
 
 Numeric_Variables = []
 
+df_Ankara["Old_Endex"] = 0
 i = 4
 for i in range(len(df_Ankara)):
     if df_Ankara["ListMonth"][i] == 1 & df_Ankara["ListYear"][i] == :
