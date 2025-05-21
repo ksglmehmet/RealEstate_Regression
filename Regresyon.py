@@ -81,7 +81,19 @@ df_Ankara.info()
 ise_yaramaz = ["CityName", "CountyName", "AdjustedPrice"]
 df_Ankara = df_Ankara.drop(ise_yaramaz, axis = 1)
 
-Numeric_Variables = []
+# Sayısal değişkenleri ve kategorik değişkenleri ayırıyorum.
+# Sayısal değişkenleri alıp, describe ile genel bakış atacağım sonra büyük ihtimalle bathroom room gibi bunlarıda category yapacağım.
+Numeric_Variables = ["ComparableArea", "BrutArea", "RealtyPrice", "Room", "LivingRoom", "Bahtroom", "FloorNumber", "BuildDate"]
+df_Ankara[Numeric_Variables].describe()
+# Bu çıktıya göre Room + Living Room yapıp Total Oda Sayısı değişkeni oluşturacağım.
+# Bathroom ve floornumberı category yapacağım. Çalışmanın sonunda bir farklılık yaratacak mı diye numeric yapıp bakacağım.
+
+
+Categorical_Variables = ["FrontageNorth", "FrontageSouth", "FrontageEast", "FrontageWest", 
+"AttributeMainRoad", "AttributeWideRoad", "AttributeSportComplex", "AttributePlayGround", "AttributeElevator", "AttributeGenerator", 
+"AttributeGateKeeper", "AttributeSecurity", "AttributeParkingAreaOutdoor", "AttributeParkingAreaIndoor", "AttributeSwimmingPoolOutdoor", 
+"AttributeSwimmingPoolIndoor", "AttributeHeatIsolation", "AttributeAirCondition", "ViewCity", "ViewNature"]
+df_Ankara[Categorical_Variables] = df_Ankara[Categorical_Variables].astype("category")
 
 df_Ankara["Old_Endex"] = 0
 i = 4
