@@ -4,6 +4,7 @@
 # 2018-23 Yılları Arasında veriye sahibim, bunları import edip, pandas.concat ile birleştiricem.
 import pandas as pd
 import openpyxl
+import stats
 
 # Bilimsel gösterimi kapat, sayıları tam göster
 pd.set_option('display.float_format', '{:.2f}'.format)
@@ -166,5 +167,13 @@ df_Ankara["New_Endex"] = df_Ankara["New_Endex"].str.replace(",", ".").astype(flo
 
 df_Ankara["Guncel_Fiyat"] = df_Ankara["RealtyPrice"] * ((df_Ankara["New_Endex"] / df_Ankara["Old_Endex"]))
 df_Ankara["Guncel_Fiyat"] = round(df_Ankara["Guncel_Fiyat"], 0).astype(int)
+#  df_Ankara.to_excel("cikti.xlsx")
+
+# Temel İstatistiki Sonuçlara Bakalım
+
+# Numeric Data
+df_Ankara.describe().T
+
+
 
 
