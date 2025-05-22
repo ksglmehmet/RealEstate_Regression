@@ -17,13 +17,13 @@ path_2021 = "C:/Users/mehmetakifkosoglu.TORUNLARENERJI/Desktop/Personel_Workspac
 path_2022 = "C:/Users/mehmetakifkosoglu.TORUNLARENERJI/Desktop/Personel_Workspace/RealEstate_Regression/Data/2022 Apartman Satılık.csv"
 path_2023 = "C:/Users/mehmetakifkosoglu.TORUNLARENERJI/Desktop/Personel_Workspace/RealEstate_Regression/Data/2023 Apartman Satılık.csv"
 
-# Evdeki PC PATH
-path_2018 = "C:/Users/Makkos/Desktop/Personel_Workspace/RealEstate_Regression/Data/2018 Apartman Satılık.csv"
-path_2019 = "C:/Users/Makkos/Desktop/Personel_Workspace/RealEstate_Regression/Data/2019 Apartman Satılık.csv"
-path_2020 = "C:/Users/Makkos/Desktop/Personel_Workspace/RealEstate_Regression/Data/2020 Apartman Satılık.csv"
-path_2021 = "C:/Users/Makkos/Desktop/Personel_Workspace/RealEstate_Regression/Data/2021 Apartman Satılık.csv"
-path_2022 = "C:/Users/Makkos/Desktop/Personel_Workspace/RealEstate_Regression/Data/2022 Apartman Satılık.csv"
-path_2023 = "C:/Users/Makkos/Desktop/Personel_Workspace/RealEstate_Regression/Data/2023 Apartman Satılık.csv"
+# # Evdeki PC PATH
+# path_2018 = "C:/Users/Makkos/Desktop/Personel_Workspace/RealEstate_Regression/Data/2018 Apartman Satılık.csv"
+# path_2019 = "C:/Users/Makkos/Desktop/Personel_Workspace/RealEstate_Regression/Data/2019 Apartman Satılık.csv"
+# path_2020 = "C:/Users/Makkos/Desktop/Personel_Workspace/RealEstate_Regression/Data/2020 Apartman Satılık.csv"
+# path_2021 = "C:/Users/Makkos/Desktop/Personel_Workspace/RealEstate_Regression/Data/2021 Apartman Satılık.csv"
+# path_2022 = "C:/Users/Makkos/Desktop/Personel_Workspace/RealEstate_Regression/Data/2022 Apartman Satılık.csv"
+# path_2023 = "C:/Users/Makkos/Desktop/Personel_Workspace/RealEstate_Regression/Data/2023 Apartman Satılık.csv"
 
 # base_path = "C:/Users/mehmetakifkosoglu.TORUNLARENERJI/OneDrive - Torunlar Enerji Sanayi ve Ticaret Anonim Şirketi/Gayrimenkul Pazar Analizi/Odev_Regresyon/Data"
 # years = ["2023", "2022", "2021", "2020", "2019", "2018"]
@@ -64,9 +64,9 @@ df_Ankara = df_Ankara.reset_index(drop = True) # drop = True, index kolonun sils
 
 # Geçmiş tarihli fiyat verisini, Yİ-ÜFE ile bugüne getirelim. En güncel Yİ-ÜFE verisi 2025-Nisan'a ait.
 path_tuik_Ofis = "C:/Users/mehmetakifkosoglu.TORUNLARENERJI/Desktop/Personel_Workspace/RealEstate_Regression/Data/yi_ufe.csv"
-path_tuik_Ev = "C:/Users/Makkos/Desktop/Personel_Workspace/RealEstate_Regression/Data/yi_ufe.csv"
+# path_tuik_Ev = "C:/Users/Makkos/Desktop/Personel_Workspace/RealEstate_Regression/Data/yi_ufe.csv"
 
-tuik = pd.read_csv(path_tuik_Ev, sep = ";", encoding = "ISO-8859-9")
+tuik = pd.read_csv(path_tuik_Ofis, sep = ";", encoding = "ISO-8859-9")
 
 # Veri Tiplerini Düzenleyelim.
 df_Ankara.info()
@@ -97,7 +97,6 @@ Categorical_Variables = ["Bahtroom","FrontageNorth", "FrontageSouth", "FrontageE
 "AttributeGateKeeper", "AttributeSecurity", "AttributeParkingAreaOutdoor", "AttributeParkingAreaIndoor", "AttributeSwimmingPoolOutdoor", 
 "AttributeSwimmingPoolIndoor", "AttributeHeatIsolation", "AttributeAirCondition", "ViewCity", "ViewNature"]
 df_Ankara[Categorical_Variables] = df_Ankara[Categorical_Variables].astype("category")
-df_Ankara.info()
 
 # BuildDate değişkeni, binanın yapım yılı
 # 1 - Güncel yıl - Yapım Yılı yapıp yaşını bulacağım.
@@ -106,18 +105,66 @@ df_Ankara.info()
 # 4 - Çalışmanın sonunda bir farklılık yaratacak mı diye numeric yapıp bakacağım.
 # Sahip olduğum data 2018 - 23 yılları arasında olduğu için 2025 değilde 2023 den çıkardım.
 df_Ankara["BinaYasi"] = 2023 - df_Ankara["BuildDate"]
-if df_Ankara["BinaYasi"] <= 3:
-    df_Ankara["BinaYasi_Grup"] = 0
+df_Ankara["BinaYasi_Grup"] = 0
+df_Ankara.info()
+
+def bina_yas_grubu(BinaYasi):
+    if BinaYasi <= 3:
+        return 0
+    elif BinaYasi <= 7:
+        return 1
+    elif BinaYasi <= 11:
+        return 2
+    elif BinaYasi <= 15:
+        return 3
+    elif BinaYasi <= 19:
+        return 4
+    elif BinaYasi <= 23:
+        return 5
+    elif BinaYasi <= 27:
+        return 6
+    else:
+        return 7
+
+df_Ankara["BinaYasi_Grup"] = df_Ankara["BinaYasi"].apply(bina_yas_grubu)
+df_Ankara["BinaYasi_Grup"] = df_Ankara["BinaYasi_Grup"].astype("category")
+
+# Tüik Yİ-ÜFE verisini alıp, 2018-2023 yılları arasındaki fiyatları güncelleyeceğim.
+# df_Ankara["Old_Endex"] = 0
+# df_Ankara.drop("Old_Endex", axis = 1, inplace = True)
+
+# İlk olarak Gayrimenkul İlanlarının Ay ve Tarihlerine Göre Tüik Enflasyon Endeksini Yazdıracağım.
+# Wide -> Long: Aylar tek sütun, enflasyon değerleri tek sütun olacak
+tuik_long = tuik.melt(id_vars=["Yıl"], 
+                      var_name="Ay", 
+                      value_name="Endeks")
+
+# Ay adlarını Türkçe'den sayıya çevirme
+ay_map = {
+    "Ocak": 1, "Şubat": 2, "Mart": 3, "Nisan": 4,
+    "Mayıs": 5, "Haziran": 6, "Temmuz": 7, "Ağustos": 8,
+    "Eylül": 9, "Ekim": 10, "Kasım": 11, "Aralık": 12
+}
+tuik_long["Ay"] = tuik_long["Ay"].map(ay_map)
+
+df_Ankara = df_Ankara.merge(
+    tuik_long.rename(columns={"Endeks": "Old_Endex"}),
+    how = "left",
+    left_on = ["ListMonth", "ListYear"],
+    right_on = ["Ay", "Yıl"]
+)
+
+df_Ankara.drop(["Yıl", "Ay"], axis = 1, inplace = True)
+
+# Şimdi güncel 2025-Nisan Yİ-ÜFE verisini New_Endex olarak tabloya yazdıracağım. Fiyatı Güncellemiş, bugüne getirmiş olacağım.
+New_Endex = tuik_long.sort_values(["Yıl", "Ay"], ascending = True).iloc[-9]["Endeks"]
+df_Ankara["New_Endex"] = New_Endex
+
+# Old_Endex ile New_Endex object olarak gözüküyor. Bunlar floata. Çevirelim
+df_Ankara["Old_Endex"] = df_Ankara["Old_Endex"].str.replace(",",".").astype(float)
+df_Ankara["New_Endex"] = df_Ankara["New_Endex"].str.replace(",", ".").astype(float)
+
+df_Ankara["Guncel_Fiyat"] = df_Ankara["RealtyPrice"] * ((df_Ankara["New_Endex"] / df_Ankara["Old_Endex"]))
+df_Ankara["Guncel_Fiyat"] = round(df_Ankara["Guncel_Fiyat"], 0).astype(int)
 
 
-df_Ankara["Old_Endex"] = 0
-i = 4
-for i in range(len(df_Ankara)):
-    if df_Ankara["ListMonth"][i] == 1 & df_Ankara["ListYear"][i] == :
-        df_Ankara["Old_Endex"][i] = tuik.iloc[17,1]
-    elif df_Ankara["ListMonth"][i] == 2:
-        df_Ankara["Old_Endex"][i] = tuik.iloc[17,2]
-    elif df_Ankara["ListMonth"][i] == 3:
-        df_Ankara["Old_Endex"][i] = tuik.iloc[17,3]
-    elif df_Ankara["ListMonth"][i] == 4:
-        df_Ankara["Old_Endex"][i] = tuik.iloc[17,4]
