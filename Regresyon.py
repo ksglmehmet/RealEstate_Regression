@@ -50,6 +50,7 @@ data = pd.concat([data_2023, data_2022, data_2021, data_2020, data_2019, data_20
 # Veriden Ankara - Çankaya - İlgili Mahalleleri Filtreleyelim. Onları Alalım.
 # Ana Data'nın kopyasını oluşturuyorum.
 df = data.copy()
+del data, data_2018, data_2019, data_2020, data_2021, data_2022, data_2023 # Siliyorum, rami gereksiz çok şişiriyor.
 districts = ["Büyükesat", "Kazım Özalp", "100.yıl", "100. Yıl", "Murat", "Bayraktar",
               "Bağcılar", "Kırkkonaklar", "Birlik", "Umut", "Aşıkpaşa", "Sancak", "Yıldızevler",
               "Çankaya", "Gaziosmanpaşa", "Barbaros", "Muhsin Ertuğrul", "Küçükesat", "Metin Oktay", "Doğuş",
@@ -167,7 +168,10 @@ df_Ankara["New_Endex"] = df_Ankara["New_Endex"].str.replace(",", ".").astype(flo
 
 df_Ankara["Guncel_Fiyat"] = df_Ankara["RealtyPrice"] * ((df_Ankara["New_Endex"] / df_Ankara["Old_Endex"]))
 df_Ankara["Guncel_Fiyat"] = round(df_Ankara["Guncel_Fiyat"], 0).astype(int)
+
 #  df_Ankara.to_excel("cikti.xlsx")
+df_Ankara.info()
+
 
 # Temel İstatistiki Sonuçlara Bakalım
 
