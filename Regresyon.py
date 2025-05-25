@@ -48,6 +48,8 @@ data_2023 = pd.read_csv(path_2023, sep = ";", usecols = usecols)
 # import ettiklerimizi concat ile birleştirelim.
 data = pd.concat([data_2023, data_2022, data_2021, data_2020, data_2019, data_2018])
 
+del data, data_2018, data_2019, data_2020, data_2021, data_2022, data_2023 # Siliyorum, rami gereksiz çok şişiriyor.
+
 
 # Veriden Ankara - Çankaya - İlgili Mahalleleri Filtreleyelim. Onları Alalım.
 # Ana Data'nın kopyasını oluşturuyorum.
@@ -215,5 +217,3 @@ df_Ankara_clean["Guncel_Fiyat"].skew()
 df_Ankara_clean["Guncel_Fiyat"].kurtosis()
 # Sıfıra oldukça yakın hale geldi.
 # Yinede normallik testi yapacağım.
-
-
