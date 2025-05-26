@@ -169,6 +169,11 @@ df_Ankara["New_Endex"] = df_Ankara["New_Endex"].str.replace(",", ".").astype(flo
 df_Ankara["Guncel_Fiyat"] = df_Ankara["RealtyPrice"] * ((df_Ankara["New_Endex"] / df_Ankara["Old_Endex"]))
 df_Ankara["Guncel_Fiyat"] = round(df_Ankara["Guncel_Fiyat"], 0).astype(int)
 
+df_Ankara["Guncel_Fiyat2"] = df_Ankara["RealtyPrice"] * ((df_Ankara["New_Endex"] - df_Ankara["Old_Endex"]) / df_Ankara["Old_Endex"])
+df_Ankara["Guncel_Fiyat2"] = round(df_Ankara["Guncel_Fiyat"], 0).astype(int)
+df_Ankara
+
+
 #  df_Ankara.to_excel("cikti.xlsx")
 df_Ankara.info()
 
