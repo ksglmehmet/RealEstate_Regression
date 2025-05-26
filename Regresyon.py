@@ -7,6 +7,8 @@ import openpyxl
 import scipy.stats as stats
 import seaborn as sns
 import matplotlib.pyplot as plt
+import numpy as np
+# Veri Bilimi ve İstatistiksel Analiz için gerekli kütüphaneleri import ettik.
 
 # Bilimsel gösterimi kapat, sayıları tam göster
 pd.set_option('display.float_format', '{:.2f}'.format)
@@ -151,7 +153,6 @@ tuik_long["Ay"] = tuik_long["Ay"].map(ay_map)
 
 # df_Ankara ile tuik_long'da yer alan ListYear = Yıl değişkenleri aynı data tipinde değil.
 # int - object
-tuik_long["Endeks"] = tuik_long["Endeks"].astype(int)
 # Endeks içinde virgül var ise nokta ile değiştirip float yapacağım.
 tuik_long["Endeks"] = tuik_long["Endeks"].astype(str).str.replace(",", ".").astype(float)
 
@@ -170,8 +171,8 @@ New_Endex = tuik_long.sort_values(["Yıl", "Ay"], ascending = True).iloc[-9]["En
 df_Ankara["New_Endex"] = New_Endex
 
 # Old_Endex ile New_Endex object olarak gözüküyor. Bunlar floata. Çevirelim
-df_Ankara["Old_Endex"] = df_Ankara["Old_Endex"].str.replace(",",".").astype(float)
-df_Ankara["New_Endex"] = df_Ankara["New_Endex"].str.replace(",", ".").astype(float)
+# df_Ankara["Old_Endex"] = df_Ankara["Old_Endex"].str.replace(",",".").astype(float)
+# df_Ankara["New_Endex"] = df_Ankara["New_Endex"].str.replace(",", ".").astype(float)
 
 df_Ankara["Guncel_Fiyat"] = df_Ankara["RealtyPrice"] * ((df_Ankara["New_Endex"] / df_Ankara["Old_Endex"]))
 df_Ankara["Guncel_Fiyat"] = round(df_Ankara["Guncel_Fiyat"], 0).astype(int)
@@ -199,11 +200,8 @@ sns.boxplot(data = data, x = "Guncel_Fiyat")
 plt.title("Guncel_Fiyat - Boxplot (Aykırı Değerlerle)")
 plt.show()
 
-skewness = data["Guncel_Fiyat"].skew()
-skewness # 98.80428204987487
-
-kurtosis = data["Guncel_Fiyat"].kurtosis()
-kurtosis # 10465.75302276866
+data["Guncel_Fiyat"].skew() # 98.80428204987487
+data["Guncel_Fiyat"].kurtosis() # 10465.75302276866
 
 # Çarpıklık ve basıklık değerleri çok yüksek. Normal dağılıma uymuyor. 
 # Çarpıklık ve basıklık 0'a yakın olmalı ve genelde, -2 2 arasında olması beklenmektedir.
@@ -218,8 +216,13 @@ IQR = Q3 - Q1
 Minimum = Q1 - 1.5 * IQR # -1643695.0   
 Maximum = Q3 + 1.5 * IQR # 9.809.265.0
 
-data_aykiri = data[(data["Guncel_Fiyat"] < Minimum) | (data["Guncel_Fiyat"] > Maximum)]
-data_clean_y = data[(data["Guncel_Fiyat"] >= Minimum) & (data["Guncel_Fiyat"] <= Maximum)]
+# Yukarıdaki aykırı değer tespitinde bir sorun var o da şu;
+# Minimum değeri -1643695.0 çıktı. Bu kadar düşük bir değer yok.
+# Veri setimde satılık fiyatı 1000 2000 vs olan gözlemler var. Dolayısıyla hal böyle iken bunlar aykırı değer olarak görülmüyor.
+Minimum_sabit = max(1250000, Minimum)
+
+data_aykiri = data[(data["Guncel_Fiyat"] < Minimum_sabit) | (data["Guncel_Fiyat"] > Maximum)]
+data_clean_y = data[(data["Guncel_Fiyat"] >= Minimum_sabit) & (data["Guncel_Fiyat"] <= Maximum)]
 
 # df_Ankara_clean ile aykırı değerleri temizledik. Şimdi bidaha Skewness - Kurtosis ve histogram yapalım.
 sns.displot(data = data_clean_y["Guncel_Fiyat"], kde=True)
@@ -229,9 +232,34 @@ data_clean_y["Guncel_Fiyat"].kurtosis() # 0.19848577880637341
 # Sıfıra oldukça yakın hale geldi.
 # Yinede normallik testi yapacağım.
 # Hipotez Kuralım.
-
 # H0 : Bağımlı değişken (Guncel_Fiyat) normal dağılıma sahiptir. (p-value > 0.05)
 # H1 : Bağımlı değişken (Guncel_Fiyat) normal dağılıma sahip değildir. (p-value < 0.05)
-stats.shapiro(data["Guncel_Fiyat"])
-f"T-Statistic"# Daha okunabilir.
 
+# Shapiro Testi
+stats.shapiro(data_clean_y["Guncel_Fiyat"])
+f"T-Statistic : {stats.shapiro(data_clean_y["Guncel_Fiyat"])[0]:.4f}" # Daha okunabilir.
+f"P-Value : {stats.shapiro(data_clean_y["Guncel_Fiyat"])[1]:.4f}"
+
+# Kolmogorov-Smirnov Test
+stats.kstest(data_clean_y["Guncel_Fiyat"], 'norm')
+f"T-Statistic : {stats.kstest(data_clean_y["Guncel_Fiyat"], 'norm')[0]:.4f}"
+f"P-Value : {stats.kstest(data_clean_y["Guncel_Fiyat"], 'norm')[1]:.4f}"
+
+# Shapiro ve Kolmogorov-Smirnov testleri p-value değerleri 0.05'ten küçük olduğu için H0 hipotezini reddediyoruz.
+# Yani bağımlı değişkenimiz normal dağılıma sahip değildir.
+# Aykırı değerleri silmiştim. Şimdi de logaritmik dönüşüm yapacağım.
+data_clean_y["Log_Guncel_Fiyat"] = np.log(data_clean_y["Guncel_Fiyat"])
+
+sns.displot(data = data_clean_y["Log_Guncel_Fiyat"], kde = True)
+data_clean_y["Log_Guncel_Fiyat"].skew() # 0.09029889035786971
+data_clean_y["Log_Guncel_Fiyat"].kurtosis() # -0.7474005896933811
+
+f"T-Statistic : {stats.shapiro(data_clean_y["Log_Guncel_Fiyat"])[0]:.5f}" # Daha okunabilir.
+f"P-Value : {stats.shapiro(data_clean_y["Log_Guncel_Fiyat"])[1]:.5f}"
+
+# Log alınıp, shapiro testine göre, H0 Red edilir. Dolayısıyla, bağımlı değişkenimiz normal dağılıma sahip değildir.
+# Basıklık ve çarpıklık değerlerine göre test yapan, Jarque-Bera testi yapacağım.
+# Jarque-Bera Testi
+jb_test = stats.jarque_bera(data_clean_y["Log_Guncel_Fiyat"])
+f"T-Statistic : {jb_test[0]:.4f}" # Daha okunabilir.
+f"P-Value : {jb_test[1]:.5f}"
