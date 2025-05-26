@@ -52,5 +52,3 @@ RealEstate_Regression/
 └── README.md              # Proje dokümantasyonu
 ```
 
-## Katkıda Bulunanlar
-- Mehmet Akif KÖSOĞLU
