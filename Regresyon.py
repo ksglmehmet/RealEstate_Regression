@@ -187,6 +187,7 @@ df_Ankara.describe().T
 
 ise_yaramaz = ["DistrictName", "ComparableArea", "Room", "LivingRoom", "BuildDate", "ListMonth", "ListYear",
                "Old_Endex", "New_Endex", "RealtyPrice"]
+
 data = df_Ankara.drop(ise_yaramaz, axis = 1)
 ######################################################################################################
 # Veri Hazırlama Bitti, İstatistiksel Analiz Kısmına Geçelim. Aykırı Değer Analizi Vs Yapalım.
@@ -206,6 +207,9 @@ data["Guncel_Fiyat"].kurtosis() # 10465.75302276866
 # Çarpıklık ve basıklık değerleri çok yüksek. Normal dağılıma uymuyor. 
 # Çarpıklık ve basıklık 0'a yakın olmalı ve genelde, -2 2 arasında olması beklenmektedir.
 
+######################################################################################################
+# Numeric Datalar İçin Aykırı Değer Analizi
+######################################################################################################
 # Aykırı değer analizi yapalım.
 # IQR yöntemini kullanacağım.
 Q1 = data["Guncel_Fiyat"].quantile(0.25)
@@ -229,6 +233,61 @@ sns.displot(data = data_clean_y["Guncel_Fiyat"], kde=True)
 
 data_clean_y["Guncel_Fiyat"].skew() # 0.8366203031900582
 data_clean_y["Guncel_Fiyat"].kurtosis() # 0.19848577880637341
+
+######################################################################################################
+# Categorical Datalar İçin Aykırı Değer Analizi
+######################################################################################################
+for i in data_clean_y.select_dtypes(include="category").columns:
+    print(f"\n{i} değişkeninin frekans dağılımı: \n")
+    print(data_clean_y[i].value_counts())
+    print("-" * 50)
+
+for i in data_clean_y.select_dtypes(include="category").columns:
+    print(f"\n{i} değişkeninin frekans dağılımı (%):")
+    print(data_clean_y[i].value_counts(normalize=True).mul(100).round(2))
+    print("-" * 50)
+
+def clean_rare_categories(data_clean_y, columns, threshold=0.05):
+    """
+    Belirtilen sütundaki frekansı belirli bir eşiğin altında olan kategorileri temizler.
+
+    Parametreler:
+    df (pd.DataFrame): Temizlenecek DataFrame.
+    column (str): Frekans analizi yapılacak kategorik sütunun adı.
+    threshold (float): Bir kategorinin aykırı kabul edilmesi için minimum frekans (örneğin, 0.05 = %5).
+
+    Dönüş Değeri:
+    pd.DataFrame: Temizlenmiş yeni DataFrame.
+    """
+    df_cleaned = data_clean_y.copy()
+
+   # Tek sütun string olarak verildiyse listeye çevir
+    if isinstance(columns, str):
+        columns = [columns]
+    
+    for i in columns:
+        # Sütunun DataFrame'de olup olmadığını kontrol et
+        if i not in df_cleaned.columns:
+            print(f"Uyarı: '{i}' sütunu DataFrame'de bulunamadı.")
+            continue
+
+        # Frekans hesapla ve nadir kategorileri bul
+        value_counts = df_cleaned[columns].value_counts(normalize=True)
+        rare_categories = value_counts[value_counts < threshold].index.tolist()
+
+        # Nadir kategorileri temizle
+        if rare_categories:
+            num_removed_rows = df_cleaned[df_cleaned[columns].isin(rare_categories)].shape[0]
+            df_cleaned = df_cleaned[~df_cleaned[columns].isin(rare_categories)]
+            print(f"'{columns}' sütununda frekansı %{threshold*100:.2f}'den az olan {len(rare_categories)} kategori temizlendi.")
+            print(f"Silinen satır sayısı: {num_removed_rows}")
+            print(f"Silinen kategoriler: {rare_categories}")
+        else:
+            print(f"\n'{columns}' sütununda frekansı %{threshold*100:.2f}'den az kategori bulunamadı.")
+            print("-" * 50)
+    return df_cleaned
+
+
 # Sıfıra oldukça yakın hale geldi.
 # Yinede normallik testi yapacağım.
 # Hipotez Kuralım.
