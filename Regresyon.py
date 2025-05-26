@@ -5,26 +5,28 @@
 import pandas as pd
 import openpyxl
 import stats
+import seaborn as sns
+import matplotlib.pyplot as plt
 
 # Bilimsel gösterimi kapat, sayıları tam göster
 pd.set_option('display.float_format', '{:.2f}'.format)
 
 # Aşağıdaki path'leri ofis-pc ye göre değiştir.
 # Ofisteki PC PATH
-path_2018 = "C:/Users/mehmetakifkosoglu.TORUNLARENERJI/Desktop/Personel_Workspace/RealEstate_Regression/Data/2018 Apartman Satılık.csv"
-path_2019 = "C:/Users/mehmetakifkosoglu.TORUNLARENERJI/Desktop/Personel_Workspace/RealEstate_Regression/Data/2019 Apartman Satılık.csv"
-path_2020 = "C:/Users/mehmetakifkosoglu.TORUNLARENERJI/Desktop/Personel_Workspace/RealEstate_Regression/Data/2020 Apartman Satılık.csv"
-path_2021 = "C:/Users/mehmetakifkosoglu.TORUNLARENERJI/Desktop/Personel_Workspace/RealEstate_Regression/Data/2021 Apartman Satılık.csv"
-path_2022 = "C:/Users/mehmetakifkosoglu.TORUNLARENERJI/Desktop/Personel_Workspace/RealEstate_Regression/Data/2022 Apartman Satılık.csv"
-path_2023 = "C:/Users/mehmetakifkosoglu.TORUNLARENERJI/Desktop/Personel_Workspace/RealEstate_Regression/Data/2023 Apartman Satılık.csv"
+# path_2018 = "C:/Users/mehmetakifkosoglu.TORUNLARENERJI/Desktop/Personel_Workspace/RealEstate_Regression/Data/2018 Apartman Satılık.csv"
+# path_2019 = "C:/Users/mehmetakifkosoglu.TORUNLARENERJI/Desktop/Personel_Workspace/RealEstate_Regression/Data/2019 Apartman Satılık.csv"
+# path_2020 = "C:/Users/mehmetakifkosoglu.TORUNLARENERJI/Desktop/Personel_Workspace/RealEstate_Regression/Data/2020 Apartman Satılık.csv"
+# path_2021 = "C:/Users/mehmetakifkosoglu.TORUNLARENERJI/Desktop/Personel_Workspace/RealEstate_Regression/Data/2021 Apartman Satılık.csv"
+# path_2022 = "C:/Users/mehmetakifkosoglu.TORUNLARENERJI/Desktop/Personel_Workspace/RealEstate_Regression/Data/2022 Apartman Satılık.csv"
+# path_2023 = "C:/Users/mehmetakifkosoglu.TORUNLARENERJI/Desktop/Personel_Workspace/RealEstate_Regression/Data/2023 Apartman Satılık.csv"
 
-# # Evdeki PC PATH
-# path_2018 = "C:/Users/Makkos/Desktop/Personel_Workspace/RealEstate_Regression/Data/2018 Apartman Satılık.csv"
-# path_2019 = "C:/Users/Makkos/Desktop/Personel_Workspace/RealEstate_Regression/Data/2019 Apartman Satılık.csv"
-# path_2020 = "C:/Users/Makkos/Desktop/Personel_Workspace/RealEstate_Regression/Data/2020 Apartman Satılık.csv"
-# path_2021 = "C:/Users/Makkos/Desktop/Personel_Workspace/RealEstate_Regression/Data/2021 Apartman Satılık.csv"
-# path_2022 = "C:/Users/Makkos/Desktop/Personel_Workspace/RealEstate_Regression/Data/2022 Apartman Satılık.csv"
-# path_2023 = "C:/Users/Makkos/Desktop/Personel_Workspace/RealEstate_Regression/Data/2023 Apartman Satılık.csv"
+# Evdeki PC PATH
+path_2018 = "C:/Users/Makkos/Desktop/Personel_Workspace/RealEstate_Regression/Data/2018 Apartman Satılık.csv"
+path_2019 = "C:/Users/Makkos/Desktop/Personel_Workspace/RealEstate_Regression/Data/2019 Apartman Satılık.csv"
+path_2020 = "C:/Users/Makkos/Desktop/Personel_Workspace/RealEstate_Regression/Data/2020 Apartman Satılık.csv"
+path_2021 = "C:/Users/Makkos/Desktop/Personel_Workspace/RealEstate_Regression/Data/2021 Apartman Satılık.csv"
+path_2022 = "C:/Users/Makkos/Desktop/Personel_Workspace/RealEstate_Regression/Data/2022 Apartman Satılık.csv"
+path_2023 = "C:/Users/Makkos/Desktop/Personel_Workspace/RealEstate_Regression/Data/2023 Apartman Satılık.csv"
 
 # base_path = "C:/Users/mehmetakifkosoglu.TORUNLARENERJI/OneDrive - Torunlar Enerji Sanayi ve Ticaret Anonim Şirketi/Gayrimenkul Pazar Analizi/Odev_Regresyon/Data"
 # years = ["2023", "2022", "2021", "2020", "2019", "2018"]
@@ -46,11 +48,12 @@ data_2023 = pd.read_csv(path_2023, sep = ";", usecols = usecols)
 # import ettiklerimizi concat ile birleştirelim.
 data = pd.concat([data_2023, data_2022, data_2021, data_2020, data_2019, data_2018])
 
+del data, data_2018, data_2019, data_2020, data_2021, data_2022, data_2023 # Siliyorum, rami gereksiz çok şişiriyor.
+
 
 # Veriden Ankara - Çankaya - İlgili Mahalleleri Filtreleyelim. Onları Alalım.
 # Ana Data'nın kopyasını oluşturuyorum.
 df = data.copy()
-del data, data_2018, data_2019, data_2020, data_2021, data_2022, data_2023 # Siliyorum, rami gereksiz çok şişiriyor.
 districts = ["Büyükesat", "Kazım Özalp", "100.yıl", "100. Yıl", "Murat", "Bayraktar",
               "Bağcılar", "Kırkkonaklar", "Birlik", "Umut", "Aşıkpaşa", "Sancak", "Yıldızevler",
               "Çankaya", "Gaziosmanpaşa", "Barbaros", "Muhsin Ertuğrul", "Küçükesat", "Metin Oktay", "Doğuş",
@@ -65,10 +68,10 @@ df_Ankara = df_Ankara.reset_index(drop = True) # drop = True, index kolonun sils
 # df_Ankara.to_excel("cikti.xlsx")
 
 # Geçmiş tarihli fiyat verisini, Yİ-ÜFE ile bugüne getirelim. En güncel Yİ-ÜFE verisi 2025-Nisan'a ait.
-path_tuik_Ofis = "C:/Users/mehmetakifkosoglu.TORUNLARENERJI/Desktop/Personel_Workspace/RealEstate_Regression/Data/yi_ufe.csv"
-# path_tuik_Ev = "C:/Users/Makkos/Desktop/Personel_Workspace/RealEstate_Regression/Data/yi_ufe.csv"
+# path_tuik_Ofis = "C:/Users/mehmetakifkosoglu.TORUNLARENERJI/Desktop/Personel_Workspace/RealEstate_Regression/Data/yi_ufe.csv"
+path_tuik_Ev = "C:/Users/Makkos/Desktop/Personel_Workspace/RealEstate_Regression/Data/yi_ufe.csv"
 
-tuik = pd.read_csv(path_tuik_Ofis, sep = ";", encoding = "ISO-8859-9")
+tuik = pd.read_csv(path_tuik_Ev, sep = ";", encoding = "ISO-8859-9")
 
 # Veri Tiplerini Düzenleyelim.
 df_Ankara.info()
@@ -168,21 +171,49 @@ df_Ankara["New_Endex"] = df_Ankara["New_Endex"].str.replace(",", ".").astype(flo
 
 df_Ankara["Guncel_Fiyat"] = df_Ankara["RealtyPrice"] * ((df_Ankara["New_Endex"] / df_Ankara["Old_Endex"]))
 df_Ankara["Guncel_Fiyat"] = round(df_Ankara["Guncel_Fiyat"], 0).astype(int)
-
-df_Ankara["Guncel_Fiyat2"] = df_Ankara["RealtyPrice"] * ((df_Ankara["New_Endex"] - df_Ankara["Old_Endex"]) / df_Ankara["Old_Endex"])
-df_Ankara["Guncel_Fiyat2"] = round(df_Ankara["Guncel_Fiyat"], 0).astype(int)
-df_Ankara
-
-
-#  df_Ankara.to_excel("cikti.xlsx")
 df_Ankara.info()
 
-
 # Temel İstatistiki Sonuçlara Bakalım
-
 # Numeric Data
 df_Ankara.describe().T
 
+# Çarpıklık ve basıklık değerlerine bakalım
+# İlk olarak histogram çiziyorum.
+sns.displot(data = df_Ankara["Guncel_Fiyat"], kde=True)
+# Histogramu incelediğimizde, verinin sağa çarpık olduğunu görüyoruz. Ancak çok net değil. Boxplot yapıyorum.
+sns.boxplot(data = df_Ankara, x = "Guncel_Fiyat")
+plt.title("Guncel_Fiyat - Boxplot (Aykırı Değerlerle)")
+plt.show()
 
+sns.boxplot(data = df_Ankara, y = "Guncel_Fiyat") 
+plt.title("Guncel_Fiyat - Boxplot (Aykırı Değerlerle)")
+plt.show()
+sdsd
+skewness = df_Ankara["Guncel_Fiyat"].skew()
+skewness # 98.80428204987487
 
+kurtosis = df_Ankara["Guncel_Fiyat"].kurtosis()
+kurtosis # 10465.75302276866
+# Çarpıklık ve basıklık değerleri çok yüksek. Normal dağılıma uymuyor. 
+# Çarpıklık ve basıklık 0'a yakın olmalı ve genelde, -2 2 arasında olması beklenmektedir.
 
+# Aykırı değer analizi yapalım.
+# IQR yöntemini kullanacağım.
+Q1 = df_Ankara["Guncel_Fiyat"].quantile(0.25)
+Q3 = df_Ankara["Guncel_Fiyat"].quantile(0.75)
+IQR = Q3 - Q1
+
+# Aşağıdaki sınırlar dışında olanlar aykırı gözlemdir.
+Minimum = Q1 - 1.5 * IQR # -1643695.0 
+Maximum = Q3 + 1.5 * IQR # 9.809.265.0
+
+df_Ankara_aykiri = df_Ankara[(df_Ankara["Guncel_Fiyat"] < Minimum) | (df_Ankara["Guncel_Fiyat"] > Maximum)]
+df_Ankara_clean = df_Ankara[(df_Ankara["Guncel_Fiyat"] >= Minimum) & (df_Ankara["Guncel_Fiyat"] <= Maximum)]
+
+# df_Ankara_clean ile aykırı değerleri temizledik. Şimdi bidaha Skewness - Kurtosis ve histogram yapalım.
+sns.displot(data = df_Ankara_clean["Guncel_Fiyat"], kde=True)
+
+df_Ankara_clean["Guncel_Fiyat"].skew()
+df_Ankara_clean["Guncel_Fiyat"].kurtosis()
+# Sıfıra oldukça yakın hale geldi.
+# Yinede normallik testi yapacağım.
