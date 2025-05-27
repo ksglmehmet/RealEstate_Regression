@@ -197,8 +197,8 @@ data = df_Ankara.drop(ise_yaramaz, axis = 1)
 # İlk olarak histogram çiziyorum.
 sns.displot(data = data["Guncel_Fiyat"], kde=True) # type: ignore
 
-data["Guncel_Fiyat"].skew() # 98.80428204987487
-data["Guncel_Fiyat"].kurtosis() # 10465.75302276866
+data["Guncel_Fiyat"].skew()
+data["Guncel_Fiyat"].kurtosis()
 
 # Çarpıklık ve basıklık değerleri çok yüksek. Normal dağılıma uymuyor. 
 # Çarpıklık ve basıklık 0'a yakın olmalı ve genelde, -2 2 arasında olması beklenmektedir.
@@ -281,6 +281,21 @@ def iqr_outlier_analysis(data, columns):
 
 df_cleaned = iqr_outlier_analysis(data, data.select_dtypes(include = "int64").columns)
 
+sns.displot(data = df_cleaned["Guncel_Fiyat"], kde=True) # type: ignore
+
+df_cleaned["Guncel_Fiyat"].skew()
+df_cleaned["Guncel_Fiyat"].kurtosis()
+############################################ Fonksiyon yaz, Shapiro testi ve kolmogorov yapsın
+# jarque_bera testi yap, 3 testi yapsın, if 0.05 den büyükse normal dağılıma sahiptir desin.
+# Shapiro Testi
+stats.shapiro(df_cleaned["Guncel_Fiyat"])
+f"T-Statistic : {stats.shapiro(df_cleaned["Guncel_Fiyat"])[0]:.5f}"
+f"P-Value : {stats.shapiro(df_cleaned["Guncel_Fiyat"])[1]:.5f}"
+
+# Kolmogorov-Smirnov Test
+stats.kstest(df_cleaned["Guncel_Fiyat"], 'norm')
+f"T-Statistic : {stats.kstest(df_cleaned["Guncel_Fiyat"], 'norm')[0]:.4f}"
+f"P-Value : {stats.kstest(df_cleaned["Guncel_Fiyat"], 'norm')[1]:.4f}"
 
 ######################################################################################################
 # Categorical Datalar İçin Aykırı Değer Analizi
