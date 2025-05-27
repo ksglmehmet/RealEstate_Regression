@@ -195,11 +195,7 @@ data = df_Ankara.drop(ise_yaramaz, axis = 1)
 
 # Çarpıklık ve basıklık değerlerine bakalım
 # İlk olarak histogram çiziyorum.
-sns.displot(data = data["Guncel_Fiyat"], kde=True)
-# Histogramu incelediğimizde, verinin sağa çarpık olduğunu görüyoruz. Ancak çok net değil. Boxplot yapıyorum.
-sns.boxplot(data = data, x = "Guncel_Fiyat")
-plt.title("Guncel_Fiyat - Boxplot (Aykırı Değerlerle)")
-plt.show()
+sns.displot(data = data["Guncel_Fiyat"], kde=True) # type: ignore
 
 data["Guncel_Fiyat"].skew() # 98.80428204987487
 data["Guncel_Fiyat"].kurtosis() # 10465.75302276866
@@ -212,42 +208,94 @@ data["Guncel_Fiyat"].kurtosis() # 10465.75302276866
 ######################################################################################################
 # Aykırı değer analizi yapalım.
 # IQR yöntemini kullanacağım.
-Q1 = data["Guncel_Fiyat"].quantile(0.25)
-Q3 = data["Guncel_Fiyat"].quantile(0.75)
-IQR = Q3 - Q1
+# Amacım her int ve float değişken için IQR değerini hesaplayıp, alt ve üst sınırları belirlemek.
+def iqr_outlier_analysis(data, columns):
+    """
+    Belirtilen sütunlar için IQR yöntemi ile aykırı değer analizi yapar.
 
-# Aşağıdaki sınırlar dışında olanlar aykırı gözlemdir.
-Minimum = Q1 - 1.5 * IQR # -1643695.0   
-Maximum = Q3 + 1.5 * IQR # 9.809.265.0
+    Parametreler:
+    data (pd.DataFrame): Aykırı değer analizi yapılacak DataFrame.
+    columns (list): Aykırı değer analizi yapılacak sütunların listesi.
 
-# Yukarıdaki aykırı değer tespitinde bir sorun var o da şu;
-# Minimum değeri -1643695.0 çıktı. Bu kadar düşük bir değer yok.
-# Veri setimde satılık fiyatı 1000 2000 vs olan gözlemler var. Dolayısıyla hal böyle iken bunlar aykırı değer olarak görülmüyor.
-Minimum_sabit = max(1000000, Minimum)
+    Dönüş Değeri:
+    pd.DataFrame: Aykırı değerlerin temizlendiği yeni DataFrame.
+    """
+    df_cleaned = data.copy()
+    
+    # Tek sütun string olarak verildiyse listeye çevir
+    
+    if isinstance(columns, str):
+        columns = [columns]
+        
+    # Sütunların DataFrame'de olup olmadığını kontrol et
+    for i in columns:
+        if i not in df_cleaned.columns:
+            print(f"Uyarı: '{i}' sütunu DataFrame'de bulunamadı.")
+            continue
+        
+        Q1 = df_cleaned[i].quantile(0.25)
+        Q3 = df_cleaned[i].quantile(0.75)
+        IQR = Q3 - Q1
+        
+        lower_bound = round(Q1 - 1.5 * IQR, 0)
+        upper_bound = round(Q3 + 1.5 * IQR, 0)
+        # Alt sınırı 1.000.000 TL olarak sabitliyorum. Eksili değerler olmasın.
+        # Yalnızca Guncel_Fiyat için alt sınırı 1.000.000 TL olarak sabitliyorum.
+        # Diğer sütunlar için alt sınır sabitlenmeyecek.
+        if i == "Guncel_Fiyat":
+            lower_bound_fixed = max(1750000, lower_bound) 
+            num_outliers = df_cleaned[(df_cleaned[i] < lower_bound_fixed) | (df_cleaned[i] > upper_bound)].shape[0]
+            df_cleaned = df_cleaned[(df_cleaned[i] >= lower_bound_fixed) & (df_cleaned[i] <= upper_bound)]
+            print(f"\n{i} sütunu için IQR: {IQR:.2f}, Alt sınır: {lower_bound_fixed:.2f}, Üst sınır: {upper_bound:.2f}")
+            print(f"{i} sütununda {num_outliers} aykırı değer temizlendi.")
+        elif i == "BrutArea":
+            # BrutArea için alt sınırı 35 m2 olarak sabitliyorum.
+            lower_bound_fixed = max(35, lower_bound)
+            num_outliers = df_cleaned[(df_cleaned[i] < lower_bound_fixed) | (df_cleaned[i] > upper_bound)].shape[0]
+            df_cleaned = df_cleaned[(df_cleaned[i] >= lower_bound_fixed) & (df_cleaned[i] <= upper_bound)]
+            print(f"\n{i} sütunu için IQR: {IQR:.2f}, Alt sınır: {lower_bound_fixed:.2f}, Üst sınır: {upper_bound:.2f}")
+            print(f"{i} sütununda {num_outliers} aykırı değer temizlendi.")
+        elif i == "TotalRoom":
+            # TotalRoom için alt sınırı 1 olarak sabitliyorum.
+            lower_bound_fixed = 1
+            num_outliers = df_cleaned[(df_cleaned[i] < lower_bound_fixed) | (df_cleaned[i] > upper_bound)].shape[0]
+            df_cleaned = df_cleaned[(df_cleaned[i] >= lower_bound_fixed) & (df_cleaned[i] <= upper_bound)]
+            print(f"\n{i} sütunu için IQR: {IQR:.2f}, Alt sınır: {lower_bound_fixed:.2f}, Üst sınır: {upper_bound:.2f}")
+            print(f"{i} sütununda {num_outliers} aykırı değer temizlendi.")
+        elif i == "BinaYasi":
+            # BinaYasi için alt sınırı 0 olarak sabitliyorum.
+            lower_bound_fixed = max(0, lower_bound)
+            upper_bound_fixed = min(50, upper_bound)  # Bina yaşı 40'tan fazla olamaz.
+            num_outliers = df_cleaned[(df_cleaned[i] < lower_bound_fixed) | (df_cleaned[i] > upper_bound_fixed)].shape[0]
+            df_cleaned = df_cleaned[(df_cleaned[i] >= lower_bound_fixed) & (df_cleaned[i] <= upper_bound_fixed)]
+            print(f"\n{i} sütunu için IQR: {IQR:.2f}, Alt sınır: {lower_bound_fixed:.2f}, Üst sınır: {upper_bound_fixed:.2f}")
+            print(f"{i} sütununda {num_outliers} aykırı değer temizlendi.")
+        else:
+            # Aykırı değerleri temizle
+            num_outliers = df_cleaned[(df_cleaned[i] < lower_bound) | (df_cleaned[i] > upper_bound)].shape[0]
+            df_cleaned = df_cleaned[(df_cleaned[i] >= lower_bound) & (df_cleaned[i] <= upper_bound)]
+            print(f"\n{i} sütunu için IQR: {IQR:.2f}, Alt sınır: {lower_bound:.2f}, Üst sınır: {upper_bound:.2f}")
+            print(f"{i} sütununda {num_outliers} aykırı değer temizlendi.")
+    
+    return df_cleaned
 
-data_aykiri = data[(data["Guncel_Fiyat"] < Minimum_sabit) | (data["Guncel_Fiyat"] > Maximum)]
-data_clean_y = data[(data["Guncel_Fiyat"] >= Minimum_sabit) & (data["Guncel_Fiyat"] <= Maximum)]
+df_cleaned = iqr_outlier_analysis(data, data.select_dtypes(include = "int64").columns)
 
-# df_Ankara_clean ile aykırı değerleri temizledik. Şimdi bidaha Skewness - Kurtosis ve histogram yapalım.
-sns.displot(data = data_clean_y["Guncel_Fiyat"], kde=True)
-
-data_clean_y["Guncel_Fiyat"].skew()
-data_clean_y["Guncel_Fiyat"].kurtosis()
 
 ######################################################################################################
 # Categorical Datalar İçin Aykırı Değer Analizi
 ######################################################################################################
-for i in data_clean_y.select_dtypes(include="category").columns:
+for i in df_cleaned.select_dtypes(include="category").columns:
     print(f"\n{i} değişkeninin frekans dağılımı: \n")
-    print(data_clean_y[i].value_counts())
+    print(df_cleaned[i].value_counts())
     print("-" * 50)
 
-for i in data_clean_y.select_dtypes(include="category").columns:
+for i in df_cleaned.select_dtypes(include="category").columns:
     print(f"\n{i} değişkeninin frekans dağılımı (%):")
-    print(data_clean_y[i].value_counts(normalize=True).mul(100).round(2))
+    print(df_cleaned[i].value_counts(normalize=True).mul(100).round(2))
     print("-" * 50)
 
-def clean_rare_categories(data_clean_y, columns, threshold=0.05):
+def clean_rare_categories(df_cleaned, columns, threshold=0.05):
     """
     Belirtilen sütundaki frekansı belirli bir eşiğin altında olan kategorileri temizler.
 
@@ -259,7 +307,7 @@ def clean_rare_categories(data_clean_y, columns, threshold=0.05):
     Dönüş Değeri:
     pd.DataFrame: Temizlenmiş yeni DataFrame.
     """
-    df_cleaned = data_clean_y.copy()
+    # df_cleaned = data.copy()
 
    # Tek sütun string olarak verildiyse listeye çevir
     if isinstance(columns, str):
@@ -272,18 +320,18 @@ def clean_rare_categories(data_clean_y, columns, threshold=0.05):
             continue
 
         # Frekans hesapla ve nadir kategorileri bul
-        value_counts = df_cleaned[columns].value_counts(normalize=True)
+        value_counts = df_cleaned[i].value_counts(normalize=True)
         rare_categories = value_counts[value_counts < threshold].index.tolist()
 
         # Nadir kategorileri temizle
         if rare_categories:
-            num_removed_rows = df_cleaned[df_cleaned[columns].isin(rare_categories)].shape[0]
-            df_cleaned = df_cleaned[~df_cleaned[columns].isin(rare_categories)]
-            print(f"'{columns}' sütununda frekansı %{threshold*100:.2f}'den az olan {len(rare_categories)} kategori temizlendi.")
+            num_removed_rows = df_cleaned[df_cleaned[i].isin(rare_categories)].shape[0]
+            df_cleaned = df_cleaned[~df_cleaned[i].isin(rare_categories)]
+            print(f"'{i}' sütununda frekansı %{threshold*100:.2f}'den az olan {len(rare_categories)} kategori temizlendi.")
             print(f"Silinen satır sayısı: {num_removed_rows}")
             print(f"Silinen kategoriler: {rare_categories}")
         else:
-            print(f"\n'{columns}' sütununda frekansı %{threshold*100:.2f}'den az kategori bulunamadı.")
+            print(f"\n'{i}' sütununda frekansı %{threshold*100:.2f}'den az kategori bulunamadı.")
             print("-" * 50)
     return df_cleaned
 
