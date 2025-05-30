@@ -15,20 +15,20 @@ pd.set_option('display.float_format', '{:.2f}'.format)
 
 # Aşağıdaki path'leri ofis-pc ye göre değiştir.
 # Ofisteki PC PATH
-# path_2018 = "C:/Users/mehmetakifkosoglu.TORUNLARENERJI/Desktop/Personel_Workspace/RealEstate_Regression/Data/2018 Apartman Satılık.csv"
-# path_2019 = "C:/Users/mehmetakifkosoglu.TORUNLARENERJI/Desktop/Personel_Workspace/RealEstate_Regression/Data/2019 Apartman Satılık.csv"
-# path_2020 = "C:/Users/mehmetakifkosoglu.TORUNLARENERJI/Desktop/Personel_Workspace/RealEstate_Regression/Data/2020 Apartman Satılık.csv"
-# path_2021 = "C:/Users/mehmetakifkosoglu.TORUNLARENERJI/Desktop/Personel_Workspace/RealEstate_Regression/Data/2021 Apartman Satılık.csv"
-# path_2022 = "C:/Users/mehmetakifkosoglu.TORUNLARENERJI/Desktop/Personel_Workspace/RealEstate_Regression/Data/2022 Apartman Satılık.csv"
-# path_2023 = "C:/Users/mehmetakifkosoglu.TORUNLARENERJI/Desktop/Personel_Workspace/RealEstate_Regression/Data/2023 Apartman Satılık.csv"
+path_2018 = "C:/Users/mehmetakifkosoglu.TORUNLARENERJI/Desktop/Personel_Workspace/RealEstate_Regression/Data/2018 Apartman Satılık.csv"
+path_2019 = "C:/Users/mehmetakifkosoglu.TORUNLARENERJI/Desktop/Personel_Workspace/RealEstate_Regression/Data/2019 Apartman Satılık.csv"
+path_2020 = "C:/Users/mehmetakifkosoglu.TORUNLARENERJI/Desktop/Personel_Workspace/RealEstate_Regression/Data/2020 Apartman Satılık.csv"
+path_2021 = "C:/Users/mehmetakifkosoglu.TORUNLARENERJI/Desktop/Personel_Workspace/RealEstate_Regression/Data/2021 Apartman Satılık.csv"
+path_2022 = "C:/Users/mehmetakifkosoglu.TORUNLARENERJI/Desktop/Personel_Workspace/RealEstate_Regression/Data/2022 Apartman Satılık.csv"
+path_2023 = "C:/Users/mehmetakifkosoglu.TORUNLARENERJI/Desktop/Personel_Workspace/RealEstate_Regression/Data/2023 Apartman Satılık.csv"
 
 # Evdeki PC PATH
-path_2018 = "C:/Users/Makkos/Desktop/Personel_Workspace/RealEstate_Regression/Data/2018 Apartman Satılık.csv"
-path_2019 = "C:/Users/Makkos/Desktop/Personel_Workspace/RealEstate_Regression/Data/2019 Apartman Satılık.csv"
-path_2020 = "C:/Users/Makkos/Desktop/Personel_Workspace/RealEstate_Regression/Data/2020 Apartman Satılık.csv"
-path_2021 = "C:/Users/Makkos/Desktop/Personel_Workspace/RealEstate_Regression/Data/2021 Apartman Satılık.csv"
-path_2022 = "C:/Users/Makkos/Desktop/Personel_Workspace/RealEstate_Regression/Data/2022 Apartman Satılık.csv"
-path_2023 = "C:/Users/Makkos/Desktop/Personel_Workspace/RealEstate_Regression/Data/2023 Apartman Satılık.csv"
+# path_2018 = "C:/Users/Makkos/Desktop/Personel_Workspace/RealEstate_Regression/Data/2018 Apartman Satılık.csv"
+# path_2019 = "C:/Users/Makkos/Desktop/Personel_Workspace/RealEstate_Regression/Data/2019 Apartman Satılık.csv"
+# path_2020 = "C:/Users/Makkos/Desktop/Personel_Workspace/RealEstate_Regression/Data/2020 Apartman Satılık.csv"
+# path_2021 = "C:/Users/Makkos/Desktop/Personel_Workspace/RealEstate_Regression/Data/2021 Apartman Satılık.csv"
+# path_2022 = "C:/Users/Makkos/Desktop/Personel_Workspace/RealEstate_Regression/Data/2022 Apartman Satılık.csv"
+# path_2023 = "C:/Users/Makkos/Desktop/Personel_Workspace/RealEstate_Regression/Data/2023 Apartman Satılık.csv"
 
 # base_path = "C:/Users/mehmetakifkosoglu.TORUNLARENERJI/OneDrive - Torunlar Enerji Sanayi ve Ticaret Anonim Şirketi/Gayrimenkul Pazar Analizi/Odev_Regresyon/Data"
 # years = ["2023", "2022", "2021", "2020", "2019", "2018"]
@@ -56,7 +56,7 @@ df = data.copy()
 districts = ["Büyükesat", "Kazım Özalp", "100.yıl", "100. Yıl", "Murat", "Bayraktar",
               "Bağcılar", "Kırkkonaklar", "Birlik", "Umut", "Aşıkpaşa", "Sancak", "Yıldızevler",
               "Çankaya", "Gaziosmanpaşa", "Barbaros", "Muhsin Ertuğrul", "Küçükesat", "Metin Oktay", "Doğuş",
-              "Esatoğlu", "Tınaztepe"]
+              "Esatoğlu", "Tınaztepe", "Hilal", "Yukarı Dikmen", "Metin Akkuş", "İlker", "Remzi Oğuz Arık", "Kavaklıdere", "Aziziye", "Güvenevler", "Osman Temiz", "Naci Çakır"]
 df_Ankara = df[(df["CityName"] == "Ankara") 
                & (df["CountyName"] == "Çankaya") 
                & (df["DistrictName"].isin(districts))]
@@ -67,10 +67,10 @@ del data, data_2018, data_2019, data_2020, data_2021, data_2022, data_2023 # Sil
 df_Ankara.index = range(1, len(df_Ankara) + 1)
 
 # Geçmiş tarihli fiyat verisini, Yİ-ÜFE ile bugüne getirelim. En güncel Yİ-ÜFE verisi 2025-Nisan'a ait.
-# path_tuik_Ofis = "C:/Users/mehmetakifkosoglu.TORUNLARENERJI/Desktop/Personel_Workspace/RealEstate_Regression/Data/yi_ufe.csv"
-path_tuik_Ev = "C:/Users/Makkos/Desktop/Personel_Workspace/RealEstate_Regression/Data/yi_ufe.csv"
+path_tuik_Ofis = "C:/Users/mehmetakifkosoglu.TORUNLARENERJI/Desktop/Personel_Workspace/RealEstate_Regression/Data/yi_ufe.csv"
+# path_tuik_Ev = "C:/Users/Makkos/Desktop/Personel_Workspace/RealEstate_Regression/Data/yi_ufe.csv"
 
-tuik = pd.read_csv(path_tuik_Ev, sep = ";", encoding = "ISO-8859-9")
+tuik = pd.read_csv(path_tuik_Ofis, sep = ";", encoding = "ISO-8859-9")
 
 # Veri Tiplerini Düzenleyelim.
 df_Ankara.info()
@@ -110,7 +110,6 @@ df_Ankara.info()
 df_Ankara["BinaYasi"] = 2023 - df_Ankara["BuildDate"]
 df_Ankara["BinaYasi_Grup"] = 0
 df_Ankara.info()
-df_Ankara
 
 def bina_yas_grubu(BinaYasi):
     if BinaYasi <= 3:
@@ -132,7 +131,6 @@ def bina_yas_grubu(BinaYasi):
 
 df_Ankara["BinaYasi_Grup"] = df_Ankara["BinaYasi"].apply(bina_yas_grubu)
 df_Ankara["BinaYasi_Grup"] = df_Ankara["BinaYasi_Grup"].astype("category")
-df_Ankara
 # Tüik Yİ-ÜFE verisini alıp, 2018-2023 yılları arasındaki fiyatları güncelleyeceğim.
 # df_Ankara["Old_Endex"] = 0
 # df_Ankara.drop("Old_Endex", axis = 1, inplace = True)
