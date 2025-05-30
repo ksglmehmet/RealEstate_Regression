@@ -15,20 +15,20 @@ pd.set_option('display.float_format', '{:.2f}'.format)
 
 # Aşağıdaki path'leri ofis-pc ye göre değiştir.
 # Ofisteki PC PATH
-path_2018 = "C:/Users/mehmetakifkosoglu.TORUNLARENERJI/Desktop/Personel_Workspace/RealEstate_Regression/Data/2018 Apartman Satılık.csv"
-path_2019 = "C:/Users/mehmetakifkosoglu.TORUNLARENERJI/Desktop/Personel_Workspace/RealEstate_Regression/Data/2019 Apartman Satılık.csv"
-path_2020 = "C:/Users/mehmetakifkosoglu.TORUNLARENERJI/Desktop/Personel_Workspace/RealEstate_Regression/Data/2020 Apartman Satılık.csv"
-path_2021 = "C:/Users/mehmetakifkosoglu.TORUNLARENERJI/Desktop/Personel_Workspace/RealEstate_Regression/Data/2021 Apartman Satılık.csv"
-path_2022 = "C:/Users/mehmetakifkosoglu.TORUNLARENERJI/Desktop/Personel_Workspace/RealEstate_Regression/Data/2022 Apartman Satılık.csv"
-path_2023 = "C:/Users/mehmetakifkosoglu.TORUNLARENERJI/Desktop/Personel_Workspace/RealEstate_Regression/Data/2023 Apartman Satılık.csv"
+# path_2018 = "C:/Users/mehmetakifkosoglu.TORUNLARENERJI/Desktop/Personel_Workspace/RealEstate_Regression/Data/2018 Apartman Satılık.csv"
+# path_2019 = "C:/Users/mehmetakifkosoglu.TORUNLARENERJI/Desktop/Personel_Workspace/RealEstate_Regression/Data/2019 Apartman Satılık.csv"
+# path_2020 = "C:/Users/mehmetakifkosoglu.TORUNLARENERJI/Desktop/Personel_Workspace/RealEstate_Regression/Data/2020 Apartman Satılık.csv"
+# path_2021 = "C:/Users/mehmetakifkosoglu.TORUNLARENERJI/Desktop/Personel_Workspace/RealEstate_Regression/Data/2021 Apartman Satılık.csv"
+# path_2022 = "C:/Users/mehmetakifkosoglu.TORUNLARENERJI/Desktop/Personel_Workspace/RealEstate_Regression/Data/2022 Apartman Satılık.csv"
+# path_2023 = "C:/Users/mehmetakifkosoglu.TORUNLARENERJI/Desktop/Personel_Workspace/RealEstate_Regression/Data/2023 Apartman Satılık.csv"
 
 # Evdeki PC PATH
-# path_2018 = "C:/Users/Makkos/Desktop/Personel_Workspace/RealEstate_Regression/Data/2018 Apartman Satılık.csv"
-# path_2019 = "C:/Users/Makkos/Desktop/Personel_Workspace/RealEstate_Regression/Data/2019 Apartman Satılık.csv"
-# path_2020 = "C:/Users/Makkos/Desktop/Personel_Workspace/RealEstate_Regression/Data/2020 Apartman Satılık.csv"
-# path_2021 = "C:/Users/Makkos/Desktop/Personel_Workspace/RealEstate_Regression/Data/2021 Apartman Satılık.csv"
-# path_2022 = "C:/Users/Makkos/Desktop/Personel_Workspace/RealEstate_Regression/Data/2022 Apartman Satılık.csv"
-# path_2023 = "C:/Users/Makkos/Desktop/Personel_Workspace/RealEstate_Regression/Data/2023 Apartman Satılık.csv"
+path_2018 = "C:/Users/Makkos/Desktop/Personel_Workspace/RealEstate_Regression/Data/2018 Apartman Satılık.csv"
+path_2019 = "C:/Users/Makkos/Desktop/Personel_Workspace/RealEstate_Regression/Data/2019 Apartman Satılık.csv"
+path_2020 = "C:/Users/Makkos/Desktop/Personel_Workspace/RealEstate_Regression/Data/2020 Apartman Satılık.csv"
+path_2021 = "C:/Users/Makkos/Desktop/Personel_Workspace/RealEstate_Regression/Data/2021 Apartman Satılık.csv"
+path_2022 = "C:/Users/Makkos/Desktop/Personel_Workspace/RealEstate_Regression/Data/2022 Apartman Satılık.csv"
+path_2023 = "C:/Users/Makkos/Desktop/Personel_Workspace/RealEstate_Regression/Data/2023 Apartman Satılık.csv"
 
 # base_path = "C:/Users/mehmetakifkosoglu.TORUNLARENERJI/OneDrive - Torunlar Enerji Sanayi ve Ticaret Anonim Şirketi/Gayrimenkul Pazar Analizi/Odev_Regresyon/Data"
 # years = ["2023", "2022", "2021", "2020", "2019", "2018"]
@@ -67,10 +67,10 @@ del data, data_2018, data_2019, data_2020, data_2021, data_2022, data_2023 # Sil
 df_Ankara.index = range(1, len(df_Ankara) + 1)
 
 # Geçmiş tarihli fiyat verisini, Yİ-ÜFE ile bugüne getirelim. En güncel Yİ-ÜFE verisi 2025-Nisan'a ait.
-path_tuik_Ofis = "C:/Users/mehmetakifkosoglu.TORUNLARENERJI/Desktop/Personel_Workspace/RealEstate_Regression/Data/yi_ufe.csv"
-# path_tuik_Ev = "C:/Users/Makkos/Desktop/Personel_Workspace/RealEstate_Regression/Data/yi_ufe.csv"
+# path_tuik_Ofis = "C:/Users/mehmetakifkosoglu.TORUNLARENERJI/Desktop/Personel_Workspace/RealEstate_Regression/Data/yi_ufe.csv"
+path_tuik_Ev = "C:/Users/Makkos/Desktop/Personel_Workspace/RealEstate_Regression/Data/yi_ufe.csv"
 
-tuik = pd.read_csv(path_tuik_Ofis, sep = ";", encoding = "ISO-8859-9")
+tuik = pd.read_csv(path_tuik_Ev, sep = ";", encoding = "ISO-8859-9")
 
 # Veri Tiplerini Düzenleyelim.
 df_Ankara.info()
@@ -178,6 +178,7 @@ df_Ankara.info()
 
 # Temel İstatistiki Sonuçlara Bakalım
 # Numeric Data
+
 df_Ankara.describe().T
 
 # Bağımlı değişkenimiz Guncel_Fiyat ve Biz bu bağımlı değişkenimizi Yİ-ÜFE ye göre bugüne getirdik.
@@ -187,6 +188,7 @@ ise_yaramaz = ["DistrictName", "ComparableArea", "Room", "LivingRoom", "BuildDat
                "Old_Endex", "New_Endex", "RealtyPrice"]
 
 data = df_Ankara.drop(ise_yaramaz, axis = 1)
+# data.to_excel("Cikti2.xlsx")
 ######################################################################################################
 # Veri Hazırlama Bitti, İstatistiksel Analiz Kısmına Geçelim. Aykırı Değer Analizi Vs Yapalım.
 ######################################################################################################
@@ -241,7 +243,7 @@ def iqr_outlier_analysis(data, columns):
         # Yalnızca Guncel_Fiyat için alt sınırı 1.000.000 TL olarak sabitliyorum.
         # Diğer sütunlar için alt sınır sabitlenmeyecek.
         if i == "Guncel_Fiyat":
-            lower_bound_fixed = max(1750000, lower_bound) 
+            lower_bound_fixed = max(750000, lower_bound) 
             num_outliers = df_cleaned[(df_cleaned[i] < lower_bound_fixed) | (df_cleaned[i] > upper_bound)].shape[0]
             df_cleaned = df_cleaned[(df_cleaned[i] >= lower_bound_fixed) & (df_cleaned[i] <= upper_bound)]
             print(f"\n{i} sütunu için IQR: {IQR:.2f}, Alt sınır: {lower_bound_fixed:.2f}, Üst sınır: {upper_bound:.2f}")
@@ -278,6 +280,8 @@ def iqr_outlier_analysis(data, columns):
     return df_cleaned
 
 df_cleaned = iqr_outlier_analysis(data, data.select_dtypes(include = "int64").columns)
+df_cleaned.index = range(1, len(df_cleaned) + 1)
+df_cleaned.describe().T
 
 sns.displot(data = df_cleaned["Guncel_Fiyat"], kde=True) # type: ignore
 
@@ -294,6 +298,9 @@ f"P-Value : {stats.shapiro(df_cleaned["Guncel_Fiyat"])[1]:.5f}"
 stats.kstest(df_cleaned["Guncel_Fiyat"], 'norm')
 f"T-Statistic : {stats.kstest(df_cleaned["Guncel_Fiyat"], 'norm')[0]:.4f}"
 f"P-Value : {stats.kstest(df_cleaned["Guncel_Fiyat"], 'norm')[1]:.4f}"
+
+def shapiro_kolmogorov_jargue_test(data, columns):
+    print(f"T-Statistic : {stats.shapiro}")
 
 ######################################################################################################
 # Categorical Datalar İçin Aykırı Değer Analizi
