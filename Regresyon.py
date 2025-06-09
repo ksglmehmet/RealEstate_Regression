@@ -299,8 +299,21 @@ stats.kstest(df_cleaned["Guncel_Fiyat"], 'norm')
 f"T-Statistic : {stats.kstest(df_cleaned["Guncel_Fiyat"], 'norm')[0]:.4f}"
 f"P-Value : {stats.kstest(df_cleaned["Guncel_Fiyat"], 'norm')[1]:.4f}"
 
-def shapiro_kolmogorov_jargue_test(data, columns):
-    print(f"T-Statistic : {stats.shapiro}")
+def shapiro_kolmogorov_jargue_test(data, column):
+    # shapiro
+    print("Shapiro Testi")
+    print(f"T-Statistic : {stats.shapiro(data[column])[0]:.5f}")
+    print(f"P-Value : {stats.shapiro(data[column])[1]:.5f}\n")
+    # kolmogorov
+    print("Kolmogorov Testi")
+    print(f"T-Statistic : {stats.kstest(data[column], 'norm')[0]:.5f}")
+    print(f"P-Value : {stats.kstest(data[column], 'norm')[1]:.5f}\n")
+    # jagbera
+    print("Jargue Bera Testi")
+    print(f"T-Statistic : {stats.jarque_bera(data[column])[0]:.5f}")
+    print(f"P-Value : {stats.jarque_bera(data[column])[1]:.5f}\n")
+    
+shapiro_kolmogorov_jargue_test(df_cleaned, "Guncel_Fiyat")
 
 ######################################################################################################
 # Categorical Datalar İçin Aykırı Değer Analizi
@@ -362,31 +375,19 @@ def clean_rare_categories(df_cleaned, columns, threshold=0.05):
 # H0 : Bağımlı değişken (Guncel_Fiyat) normal dağılıma sahiptir. (p-value > 0.05)
 # H1 : Bağımlı değişken (Guncel_Fiyat) normal dağılıma sahip değildir. (p-value < 0.05)
 
-# Shapiro Testi
-stats.shapiro(data_clean_y["Guncel_Fiyat"])
-f"T-Statistic : {stats.shapiro(data_clean_y["Guncel_Fiyat"])[0]:.4f}" # Daha okunabilir.
-f"P-Value : {stats.shapiro(data_clean_y["Guncel_Fiyat"])[1]:.4f}"
+df_cleaned = clean_rare_categories(df_cleaned, df_cleaned.select_dtypes(include = "category"))
 
-# Kolmogorov-Smirnov Test
-stats.kstest(data_clean_y["Guncel_Fiyat"], 'norm')
-f"T-Statistic : {stats.kstest(data_clean_y["Guncel_Fiyat"], 'norm')[0]:.4f}"
-f"P-Value : {stats.kstest(data_clean_y["Guncel_Fiyat"], 'norm')[1]:.4f}"
+shapiro_kolmogorov_jargue_test(df_cleaned, "Guncel_Fiyat")
 
 # Shapiro ve Kolmogorov-Smirnov testleri p-value değerleri 0.05'ten küçük olduğu için H0 hipotezini reddediyoruz.
 # Yani bağımlı değişkenimiz normal dağılıma sahip değildir.
 # Aykırı değerleri silmiştim. Şimdi de logaritmik dönüşüm yapacağım.
-data_clean_y["Log_Guncel_Fiyat"] = np.log(data_clean_y["Guncel_Fiyat"])
+df_cleaned["Log_Guncel_Fiyat"] = np.log(df_cleaned["Guncel_Fiyat"])
 
-sns.displot(data = data_clean_y["Log_Guncel_Fiyat"], kde = True)
-data_clean_y["Log_Guncel_Fiyat"].skew() # 0.09029889035786971
-data_clean_y["Log_Guncel_Fiyat"].kurtosis() # -0.7474005896933811
+sns.displot(data = df_cleaned["Log_Guncel_Fiyat"], kde = True)
+df_cleaned["Log_Guncel_Fiyat"].skew() # 0.09029889035786971
+df_cleaned["Log_Guncel_Fiyat"].kurtosis() # -0.7474005896933811
 
-f"T-Statistic : {stats.shapiro(data_clean_y["Log_Guncel_Fiyat"])[0]:.5f}" # Daha okunabilir.
-f"P-Value : {stats.shapiro(data_clean_y["Log_Guncel_Fiyat"])[1]:.5f}"
+shapiro_kolmogorov_jargue_test(df_cleaned, "Log_Guncel_Fiyat")
 
 # Log alınıp, shapiro testine göre, H0 Red edilir. Dolayısıyla, bağımlı değişkenimiz normal dağılıma sahip değildir.
-# Basıklık ve çarpıklık değerlerine göre test yapan, Jarque-Bera testi yapacağım.
-# Jarque-Bera Testi
-jb_test = stats.jarque_bera(data_clean_y["Log_Guncel_Fiyat"])
-f"T-Statistic : {jb_test[0]:.4f}" # Daha okunabilir.
-f"P-Value : {jb_test[1]:.5f}"
